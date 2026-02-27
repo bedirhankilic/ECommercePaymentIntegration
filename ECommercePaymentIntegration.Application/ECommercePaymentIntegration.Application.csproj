@@ -15,4 +15,9 @@
     <ProjectReference Include="..\ECommercePaymentIntegration.Integrations\ECommercePaymentIntegration.Integrations.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstraction\" />
+    <Folder Include="Concretes\" />
+  </ItemGroup>
+
 </Project>
