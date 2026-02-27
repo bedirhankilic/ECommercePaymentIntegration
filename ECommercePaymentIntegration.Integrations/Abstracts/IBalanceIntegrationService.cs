@@ -6,5 +6,6 @@ namespace ECommercePaymentIntegration.Integrations.Abstracts
 {
     public interface IBalanceIntegrationService
     {
+
     }
 }
