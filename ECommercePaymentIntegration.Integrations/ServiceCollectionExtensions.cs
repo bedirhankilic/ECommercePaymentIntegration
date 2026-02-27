@@ -3,15 +3,12 @@ using ECommercePaymentIntegration.Integrations.Concretes;
 using ECommercePaymentIntegration.Integrations.Configurations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ECommercePaymentIntegration.Integrations
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddIntegrations(this IServiceCollection services, IConfiguration config)
+        public static IServiceCollection AddIntegrations(this IServiceCollection services, IConfiguration config)
         {
 
             services.Configure<BalanceManagementOptions>(config.GetSection("BalanceManagementOptions"));
@@ -21,6 +18,9 @@ namespace ECommercePaymentIntegration.Integrations
                     .ValidateOnStart();
 
             services.AddScoped<IBalanceIntegrationService, BalanceIntegrationService>();
+
+
+            return services;
         }
     }
 }
