@@ -2,7 +2,7 @@
 
 namespace ECommercePaymentIntegration.Integrations.Models.BalanceManagement.Response
 {
-    public class PreOrder
+    public class PreOrderResponse
     {
         public OrderItem preOrder { get; set; }
         public BalanceItem updatedBalance { get; set; }

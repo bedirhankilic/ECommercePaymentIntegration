@@ -1,6 +1,6 @@
 ﻿namespace ECommercePaymentIntegration.Integrations.Models.BalanceManagement.Request
 {
-    public class Cancel
+    public class CancelRequest
     {
         public string orderId { get; set; }
     }
