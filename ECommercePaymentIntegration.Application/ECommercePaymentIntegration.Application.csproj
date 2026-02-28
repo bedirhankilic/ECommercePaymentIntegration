@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ECommercePaymentIntegration.Domain\ECommercePaymentIntegration.Domain.csproj" />
+    <ProjectReference Include="..\ECommercePaymentIntegration.Infrastructure\ECommercePaymentIntegration.Infrastructure.csproj" />
     <ProjectReference Include="..\ECommercePaymentIntegration.Integrations\ECommercePaymentIntegration.Integrations.csproj" />
   </ItemGroup>
 

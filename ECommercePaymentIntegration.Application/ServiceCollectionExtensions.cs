@@ -20,7 +20,7 @@ namespace ECommercePaymentIntegration.Application
             //redis sonrası kontrol et
             services.AddTransient<IProductService, ProductService>();
             services.AddScoped<IIdentityService, IdentityService>();
-
+            services.AddScoped<IOrdersService, OrdersService>();
 
             return services;
         }
