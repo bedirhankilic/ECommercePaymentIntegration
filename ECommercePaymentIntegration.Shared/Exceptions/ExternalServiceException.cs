@@ -1,7 +1,7 @@
 ﻿namespace ECommercePaymentIntegration.Shared.Exceptions
 {
-    public class ExternalServiceException(string message, string errorCode = "External Error", IDictionary<string, object>? metadata = null, Exception? innerException = null) 
-                : ApplicationException(message, errorCode, metadata, innerException)
+    public class ExternalServiceException(string message, string errorCode = "External Error", List<string>? errors = null, Exception? innerException = null) 
+                : ApplicationException(message, errorCode, errors, innerException)
     {
 
     }

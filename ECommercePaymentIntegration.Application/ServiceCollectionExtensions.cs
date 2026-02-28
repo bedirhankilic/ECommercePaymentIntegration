@@ -1,4 +1,6 @@
-﻿using ECommercePaymentIntegration.Integrations;
+﻿using ECommercePaymentIntegration.Application.Abstraction;
+using ECommercePaymentIntegration.Application.Concretes;
+using ECommercePaymentIntegration.Integrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -13,6 +15,13 @@ namespace ECommercePaymentIntegration.Application
         {
 
             services.AddIntegrations(config);
+
+
+            //redis sonrası kontrol et
+            services.AddTransient<IProductService, ProductService>();
+            services.AddScoped<IIdentityService, IdentityService>();
+
+
             return services;
         }
     }

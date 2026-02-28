@@ -13,7 +13,6 @@ namespace ECommercePaymentIntegration.Infrastructure
         {
             services.AddDbContext<ECommerceDbContext>(opt => opt.UseSqlite(configuration.GetConnectionString("DbConnection")));
 
-
             return services;
         }
     }

@@ -1,21 +1,33 @@
 ﻿using ECommercePaymentIntegration.Integrations.Abstracts;
+using ECommercePaymentIntegration.Integrations.Configurations;
 using ECommercePaymentIntegration.Integrations.Models.BalanceManagement.Request;
 using ECommercePaymentIntegration.Integrations.Models.BalanceManagement.Response;
 using ECommercePaymentIntegration.Integrations.Models.BalanceManagement.Response.Items;
 using ECommercePaymentIntegration.Shared.Exceptions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Net.Http.Json;
 
 namespace ECommercePaymentIntegration.Integrations.Concretes
 {
-    public class BalanceIntegrationService(ILogger<BalanceIntegrationService> _logger, HttpClient _httpClient) : IBalanceIntegrationService
+    public class BalanceIntegrationService : IBalanceIntegrationService
     {
+        private readonly ILogger<BalanceIntegrationService> _logger;
+        private readonly HttpClient _httpClient;
+        private readonly BalanceManagementOptions _balanceManagement;
+        public BalanceIntegrationService(ILogger<BalanceIntegrationService> logger, HttpClient httpClient, IOptions<BalanceManagementOptions> options)
+        {
+            _logger = logger;
+            _httpClient = httpClient;
+            _balanceManagement = options.Value;
+            _httpClient.Timeout = TimeSpan.FromMilliseconds(_balanceManagement.Timeoutms);
+        }
         public async Task<BalanceBaseResponse<CancelResponse>> CancelOrder(CancelRequest request, CancellationToken cancellation = default)
         {
 
             string reqBody = System.Text.Json.JsonSerializer.Serialize(request);
 
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "/api/balance/cancel")
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, $"{_balanceManagement.BaseUrl}/api/balance/cancel")
             {
                 Content = new StringContent(reqBody, System.Text.Encoding.UTF8, "application/json")
             };
@@ -38,7 +50,7 @@ namespace ECommercePaymentIntegration.Integrations.Concretes
         {
             string reqBody = System.Text.Json.JsonSerializer.Serialize(request);
 
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "/api/balance/complete")
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, $"{_balanceManagement.BaseUrl}/api/balance/complete")
             {
                 Content = new StringContent(reqBody, System.Text.Encoding.UTF8, "application/json")
             };
@@ -61,7 +73,7 @@ namespace ECommercePaymentIntegration.Integrations.Concretes
         {
             _logger.LogInformation("Sending GetBalance request to Balance service. /api/balance");
 
-            using var response = await _httpClient.GetAsync("/api/balance", cancellation);
+            using var response = await _httpClient.GetAsync($"{_balanceManagement.BaseUrl}/api/balance", cancellation);
 
             await EnsureSuccessOrThrow(response, cancellation);
 
@@ -76,7 +88,7 @@ namespace ECommercePaymentIntegration.Integrations.Concretes
         {
             _logger.LogInformation("Sending GetProducts request to Balance service. /api/balance");
 
-            using var response = await _httpClient.GetAsync("/api/products", cancellation);
+            using var response = await _httpClient.GetAsync($"{_balanceManagement.BaseUrl}/api/products", cancellation);
 
             await EnsureSuccessOrThrow(response, cancellation);
 
@@ -91,7 +103,7 @@ namespace ECommercePaymentIntegration.Integrations.Concretes
         {
             string reqBody = System.Text.Json.JsonSerializer.Serialize(request);
 
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "/api/balance/preorder")
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, $"{_balanceManagement.BaseUrl}/api/balance/preorder")
             {
                 Content = new StringContent(reqBody, System.Text.Encoding.UTF8, "application/json")
             };

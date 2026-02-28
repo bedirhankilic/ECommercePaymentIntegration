@@ -3,12 +3,12 @@
     public class ApplicationException : Exception
     {
         public string ErrorCode { get; }
-        public IDictionary<string, object>? Metadata { get; }
+        public List<string>? Errors { get; }
 
-        public ApplicationException(string message, string errorCode = "Business Error", IDictionary<string, object>? metadata = null, Exception? innerException = null) : base(message, innerException)
+        public ApplicationException(string message, string errorCode = "Business Error", List<string>? errors = null, Exception? innerException = null) : base(message, innerException)
         {
             ErrorCode = errorCode;
-            Metadata = metadata;
+            Errors = errors;
         }
     }
 }
