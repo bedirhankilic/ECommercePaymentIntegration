@@ -26,8 +26,8 @@ namespace ECommercePaymentIntegration.Infrastructure.Configurations
             b.HasIndex(x=>x.UserId);
 
             b.HasMany(x => x.OrderItems)
-                .WithOne()
-                .HasForeignKey("OrderId")   
+                .WithOne(x => x.Order)
+                .HasForeignKey(x => x.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             b.Navigation(x => x.OrderItems)

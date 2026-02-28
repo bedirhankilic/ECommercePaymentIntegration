@@ -4,12 +4,25 @@ using ECommercePaymentIntegration.Infrastructure;
 using ECommercePaymentIntegration.Shared.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using Serilog;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithEnvironmentName()
+    .Enrich.WithThreadId()
+    .WriteTo.Console(
+        outputTemplate:
+        "[{Timestamp:HH:mm:ss} {Level:u3}] " +
+        "[{EnvironmentName}] " +
+        "[CorrId:{CorrelationId}] " +
+        "{Message:lj} {Properties:j}{NewLine}{Exception}")
+    .CreateLogger();
 
 // Add services to the container.
 

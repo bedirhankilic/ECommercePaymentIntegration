@@ -47,8 +47,7 @@ namespace ECommercePaymentIntegration.Infrastructure.Migrations
                     Quantity = table.Column<int>(type: "INTEGER", nullable: false),
                     PriceTotal = table.Column<decimal>(type: "TEXT", nullable: false),
                     Currency = table.Column<string>(type: "TEXT", maxLength: 3, nullable: false),
-                    Category = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    OrderId1 = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Category = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -60,13 +59,6 @@ namespace ECommercePaymentIntegration.Infrastructure.Migrations
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_OrderItems_Orders_OrderId1",
-                        column: x => x.OrderId1,
-                        principalSchema: "ECommerce",
-                        principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -74,12 +66,6 @@ namespace ECommercePaymentIntegration.Infrastructure.Migrations
                 schema: "ECommerce",
                 table: "OrderItems",
                 column: "OrderId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrderId1",
-                schema: "ECommerce",
-                table: "OrderItems",
-                column: "OrderId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_ProductId",

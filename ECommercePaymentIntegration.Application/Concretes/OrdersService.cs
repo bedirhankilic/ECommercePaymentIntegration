@@ -29,6 +29,9 @@ namespace ECommercePaymentIntegration.Application.Concretes
             if (order == null)
                 throw new NotFoundException("Order not found.");
 
+            if (order.OrderStatus != Domain.Enum.OrderStatus.Created)
+                throw new ApplicationException("Only orders with status 'Created' can be completed.");
+
             var completeOrderResponse = await _balanceIntegration.CompleteOrder(new CompleteRequest
             {
                 orderId = order.Id.ToString()
@@ -105,6 +108,7 @@ namespace ECommercePaymentIntegration.Application.Concretes
             };
 
             db.Orders.Add(order);
+            await db.SaveChangesAsync(ct);
 
             db.OrderItems.AddRange(selectedProducts.Select(s => new Domain.Entities.OrderItem
             {
@@ -118,6 +122,7 @@ namespace ECommercePaymentIntegration.Application.Concretes
                 PriceTotal = s.Price * req.Products.First(f => f.ProductId == s.Id).Quantity
             }));
 
+            await db.SaveChangesAsync(ct);
 
             var preOrder = await _balanceIntegration.PreOrder(new Integrations.Models.BalanceManagement.Request.PreOrder
             {
@@ -131,12 +136,11 @@ namespace ECommercePaymentIntegration.Application.Concretes
                 order.OrderStatus = Domain.Enum.OrderStatus.Failed;
                 order.UpdatedAt = DateTime.Now;
                 order.CancelledAt = DateTime.Now;
+                db.Orders.Update(order);
                 await db.SaveChangesAsync(ct);
 
                 throw new ApplicationException("PreOrder failed. Balance service is not available.");
             }
-
-            await db.SaveChangesAsync(ct);
 
             return new OrderCreateResponse
             {

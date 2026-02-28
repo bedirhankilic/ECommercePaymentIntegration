@@ -1,0 +1,38 @@
+# Docker Compose Proje Yapılandırması
+
+Bu klasör, projenin Docker ortamında çalışması için gerekli yapılandırma dosyalarını içerir.
+
+## Dosyalar
+
+- `docker-compose.yml` - Ana Docker Compose yapılandırması (Redis + App)
+- `Dockerfile` - Uygulama container'ı için yapılandırma
+- `DOCKER_README.md` - Detaylı kullanım rehberi
+
+## Hızlı Başlangıç
+
+```bash
+# Projeyi çalıştır
+docker-compose up -d
+
+# Logları göster
+docker-compose logs -f
+```
+
+## Servisler
+
+### Redis
+- **Görüntü**: redis:7-alpine
+- **Port**: 6379
+- **Persistence**: Aktif (AOF)
+
+### Uygulama (App)
+- **Port**: 5000 (HTTP), 5001 (HTTPS)
+- **Veritabanı**: SQLite (./data/ecommerce.db)
+- **Hot Reload**: Aktif
+
+## Veri Yönetimi
+
+- SQLite veritabanı: `./data/ecommerce.db` (Host makinede)
+- Redis verisi: `redis_data` volume (Docker tarafından yönetilir)
+
+Daha fazla bilgi için `DOCKER_README.md` dosyasını okuyun.

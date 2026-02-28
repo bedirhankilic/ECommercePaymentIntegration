@@ -81,9 +81,6 @@ namespace ECommercePaymentIntegration.Infrastructure.Migrations
                     b.Property<Guid>("OrderId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("OrderId1")
-                        .HasColumnType("TEXT");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
@@ -102,8 +99,6 @@ namespace ECommercePaymentIntegration.Infrastructure.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.HasIndex("OrderId1");
-
                     b.HasIndex("ProductId");
 
                     b.ToTable("OrderItems", "ECommerce");
@@ -111,15 +106,9 @@ namespace ECommercePaymentIntegration.Infrastructure.Migrations
 
             modelBuilder.Entity("ECommercePaymentIntegration.Domain.Entities.OrderItem", b =>
                 {
-                    b.HasOne("ECommercePaymentIntegration.Domain.Entities.Order", null)
+                    b.HasOne("ECommercePaymentIntegration.Domain.Entities.Order", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ECommercePaymentIntegration.Domain.Entities.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

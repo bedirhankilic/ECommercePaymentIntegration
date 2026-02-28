@@ -1,19 +1,25 @@
 ﻿using ECommercePaymentIntegration.Application.Abstraction;
 using ECommercePaymentIntegration.Domain.DTO.Response;
+using ECommercePaymentIntegration.Infrastructure.Cache;
 using ECommercePaymentIntegration.Integrations.Abstracts;
 using ECommercePaymentIntegration.Integrations.Models.BalanceManagement.Response;
 using ECommercePaymentIntegration.Integrations.Models.BalanceManagement.Response.Items;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ECommercePaymentIntegration.Application.Concretes
 {
-    public class ProductService(ILogger<ProductService> _logger, IBalanceIntegrationService _balanceService) : IProductService
+    public class ProductService(ILogger<ProductService> _logger, IBalanceIntegrationService _balanceService, ICacheService _cache) : IProductService
     {
         public async Task<IEnumerable<ProductItemDto>> GetProductItemsAsync(CancellationToken cancellation)
         {
+
+            var cacheProducts = await _cache.GetAsync<IEnumerable<ProductItemDto>>("product_items");
+            if (cacheProducts is not null)
+            {
+                _logger.LogInformation("Product items retrieved from cache.");
+                return cacheProducts;
+            }
+
             BalanceBaseResponse<List<ProductItem>> response = await _balanceService.GetProducts(cancellation);
 
             if (response.Data is null)
@@ -22,7 +28,7 @@ namespace ECommercePaymentIntegration.Application.Concretes
                 throw new ApplicationException($"Failed to retrieve product items: {response.Error}");
             }
 
-            return response.Data.Select(item => new ProductItemDto
+            var products = response.Data.Select(item => new ProductItemDto
             {
                 Id = item.id,
                 Name = item.name,
@@ -32,6 +38,10 @@ namespace ECommercePaymentIntegration.Application.Concretes
                 Category = item.category,
                 Stock = item.stock
             });
+
+            await _cache.SetAsync("product_items", products, TimeSpan.FromMinutes(10));
+
+            return products;
         }
     }
 }
